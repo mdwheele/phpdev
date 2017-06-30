@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  php:
+    image: php:${PHP_SERVER:-7.1-fpm}
+    volumes:
+      - ${HOST_PATH_HTTPD_DATADIR-./www}:/var/www/html
+      - ./conf/php/${PHP_SERVER}:/usr/local/etc:ro
+      - ./shared:/shared
+
+  httpd:
+    image: httpd:${HTTPD_SERVER:-2.4}
+    ports:
+      - "80:80"
+    links:
+      - php
+    volumes:
+      - ${HOST_PATH_HTTPD_DATADIR-./www}:/var/www/html
+      - ./conf/httpd/${HTTPD_SERVER}:/usr/local/apache2/conf:ro
+      - ./shared:/shared
